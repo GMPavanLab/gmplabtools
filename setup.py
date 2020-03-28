@@ -48,7 +48,7 @@ class TypecheckCommand(Command):
         print("Running command {cmd_to_run}".format(cmd_to_run=cmd_to_run))
 
         completed_process = subprocess.run(cmd_to_run, universal_newlines=True, shell=True)
-        return_code = completed_process.return_code
+        return_code = completed_process.returncode
         if return_code != 0:
             print("Error: Mypy setup.py command has failed", file=sys.stderr)
             sys.exit(0)
@@ -59,6 +59,7 @@ class TypecheckCommand(Command):
 class BuildCommand(Command):
     """Compile Pamm fortran code."""
     description = 'Compile pamm fortan code.'
+    user_options = []
 
     def initialize_options(self):
         self.packages = ""
@@ -68,11 +69,11 @@ class BuildCommand(Command):
 
     def run(self):
         # clean folder
-        subprocess.run("cd ./gmplabtools/pamm/src && make clean", shell=True )
+        _ = subprocess.run("cd ./gmplabtools/pamm/src && make clean", shell=True)
 
         cmd_to_run = "cd ./gmplabtools/pamm/src && make"
         completed_process = subprocess.run(cmd_to_run, universal_newlines=True, shell=True)
-        return_code = completed_process.return_code
+        return_code = completed_process.returncode
 
         if return_code != 0:
             print("Failed: Failed to compile Pamm code", file=sys.stderr)
