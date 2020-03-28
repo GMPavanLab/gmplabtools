@@ -1,6 +1,6 @@
 # GMP Lab Tools
 
-Tools for the analysis of Full Atomistic Simulations of [GMPLab](www.gmpavanlab.com)
+Tools for the analysis of Full Atomistic Simulations of [GMPLab](https://www.gmpavanlab.com/)
 
 ## Getting Started
 
