@@ -937,7 +937,9 @@
 
       IF(verbose) write(*,*) "Writing out"
       OPEN(UNIT=11,FILE=trim(outputfile)//".grid",STATUS='REPLACE',ACTION='WRITE')
+      OPEN(UNIT=13,FILE=trim(outputfile)//".weights",STATUS='REPLACE',ACTION='WRITE')
       DO i=1,ngrid
+         WRITE(13,"((A1,ES15.4E4))") " ", flocal(i)
          DO j=1,D
            WRITE(11,"((A1,ES15.4E4))",ADVANCE = "NO") " ", y(j,i)
          ENDDO

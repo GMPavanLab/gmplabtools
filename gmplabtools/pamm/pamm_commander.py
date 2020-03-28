@@ -77,6 +77,10 @@ class PammCommander:
     def grid_file(self):
         return "{}.{}".format(self.input_dict["o"], "grid")
 
+    @property
+    def weights_file(self):
+        return "{}.{}".format(self.input_dict["o"], "weights")
+
     def read_output(self):
         if os.path.isfile(self.bootstrap_file):
             bs =  np.loadtxt(self.bootstrap_file).astype(int)
@@ -89,7 +93,7 @@ class PammCommander:
             gmm =  GMMPredict.read_clusters(self.pamm_file)
             setattr(self, "gmm", gmm)
         else:
-            msg = "Parameter output file {} was not found.".format(self.bootstrap_file)
+            msg = "Parameter output file {} was not found.".format(self.pamm_file)
             FileNotFoundError(msg)
 
         if os.path.isfile(self.grid_file):
@@ -98,5 +102,12 @@ class PammCommander:
             setattr(self, "cluster", grid[:, self.dimension ].astype(int))
             setattr(self, "p", grid[:, self.dimension + 1])
         else:
-            msg = "Parameter output file {} was not found.".format(self.bootstrap_file)
+            msg = "Parameter output file {} was not found.".format(self.grid_file)
+            FileNotFoundError(msg)
+
+        if os.path.isfile(self.weights_file):
+            weights =  np.loadtxt(self.weights_file)
+            setattr(self, "weights", weights)
+        else:
+            msg = "Parameter output file {} was not found.".format(self.weights_file)
             FileNotFoundError(msg)
