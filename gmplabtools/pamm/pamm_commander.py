@@ -19,39 +19,41 @@ class PammCommander:
         "merger"
     )
 
-    def __init__(self, input_dict):
+    def __init__(self, input_dict, verbose=True):
         self.input_dict = input_dict
         self.run_status = None
+        self.verbose = verbose
 
     @property
     def command_parser(self):
-        return PammCommander.format(self.input_dict)
+        return self.format()
 
     @property
     def dimension(self):
         return self.input_dict.get("d", None)
 
-    @staticmethod
-    def format(input_dict):
+    def format(self):
         """
         Checks the format of the input.
         """
         pamm_command = {}
         for k in PammCommander.INPUT_FIELDS:
-            pamm_command[k] = input_dict.get(k, None)
+            pamm_command[k] = self.input_dict.get(k, None)
 
         if not ((pamm_command["fspread"] is None) ^ (pamm_command["fpoints"] is None)):
             raise ValueError("Cannot provide both `fspread` and `fpoints` values.")
 
-        if not os.path.isfile(pamm_command["readgrid"]):
-            raise ValueError("Grid file {} was not found.".format(pamm_command["readgrid"]))
+        if pamm_command["readgrid"] is not None:
+            if not os.path.isfile(pamm_command["readgrid"]):
+                raise ValueError("Grid file {} was not found.".format(pamm_command["readgrid"]))
 
         if not os.path.isfile(pamm_command["trajectory"]):
             raise ValueError("Trajectory {} was not found.".format(pamm_command["trajectory"]))
 
         fields = [k for k, v in pamm_command.items() if v is not None and k != "trajectory"]
-        command = "{exec} {args} -v < {input_traj}".format(
+        command = "{exec} {args} {verbose} < {input_traj}".format(
             exec=PammCommander.BIN_PATH,
+            verbose="" if not self.verbose else "-v",
             args=" ".join(["{}{} {}".format("-", k, pamm_command[k]) for k in fields]),
             input_traj=pamm_command["trajectory"]
         )
