@@ -10,7 +10,9 @@ logging.getLogger(__name__).setLevel(level=logging.INFO)
 
 
 class PammCommander:
-
+    """
+    Class that allow to interact with pamm and parse the results into python.
+    """
     BIN_PATH = os.path.dirname(__file__) + "/bin/pamm"
 
     INPUT_FIELDS = (
@@ -60,6 +62,9 @@ class PammCommander:
         return command
 
     def run(self):
+        """
+        Run gmplabtools/pamm/bin/pamm using the paramters in the input_dict and read the results
+        """
         command = self.command_parser
         logging.info("Executing command: {}".format(" ".join(command)))
         proc = os.system(command)
@@ -101,7 +106,7 @@ class PammCommander:
         if os.path.isfile(self.grid_file):
             grid =  np.loadtxt(self.grid_file)
             setattr(self, "grid", grid[:, :self.dimension])
-            setattr(self, "cluster", grid[:, self.dimension ].astype(int))
+            setattr(self, "cluster", grid[:, self.dimension].astype(int))
             setattr(self, "p", grid[:, self.dimension + 1])
         else:
             msg = "Parameter output file {} was not found.".format(self.grid_file)

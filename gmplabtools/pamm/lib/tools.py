@@ -54,6 +54,10 @@ class Gauss:
 
 
 class GMMPredict:
+    """
+    This class received the GMM parameters from pamm and is used to predict on
+    other datesets.
+    """
     def __init__(self, pk, mean_k, cov_k):
         self.pk = pk
         self.mean_k = mean_k
@@ -62,14 +66,20 @@ class GMMPredict:
 
     def _predict_proba(self, x):
         log_prob = [mixture.logpdf(x) for mixture in self.mixtures]
-        prob = [np.exp(log_p) * self.pk[i] for i, log_p in enumerate(log_prob)]
-        return np.array(prob)
+        prob = np.array([np.exp(log_p) * self.pk[i] for i, log_p in enumerate(log_prob)])
+        return np.array(prob) / np.sum(prob, axis=1).reshape((-1, 1))
 
     def predict_proba(self, x):
+        """
+        Predict cluster probabilities for a dataset.
+        """
         return np.apply_along_axis(self._predict_proba, 1, x)
 
     @classmethod
     def read_clusters(cls, filename):
+        """
+        Read pamm output parameter and return an instance of GMMPredict class.
+        """
         if not os.path.isfile(filename):
             raise FileNotFoundError("File {} not found.".format(filename))
         else:
