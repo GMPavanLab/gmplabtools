@@ -67,13 +67,14 @@ class GMMPredict:
     def _predict_proba(self, x):
         log_prob = [mixture.logpdf(x) for mixture in self.mixtures]
         prob = np.array([np.exp(log_p) * self.pk[i] for i, log_p in enumerate(log_prob)])
-        return np.array(prob) / np.sum(prob, axis=1).reshape((-1, 1))
+        return prob
 
     def predict_proba(self, x):
         """
         Predict cluster probabilities for a dataset.
         """
-        return np.apply_along_axis(self._predict_proba, 1, x)
+        prob = np.apply_along_axis(self._predict_proba, 1, x)
+        return  prob / np.sum(prob, axis=1).reshape((-1, 1))
 
     @classmethod
     def read_clusters(cls, filename):
