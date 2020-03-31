@@ -19,7 +19,7 @@ To install the packace the fotran code needs to be compiled. In order to do that
 be installed in the machine. To compile it is just sufficient to execute
 
 ```
-python setup.py build
+python setup.py compile
 ```
 
 a pamm executable will be stored in the pamm/bin folder. The next step after having installed the enviromnet

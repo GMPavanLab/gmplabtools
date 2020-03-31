@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-from setuptools import setup, find_packages, Command
+from setuptools import setup, Command
 
 
 class CleanCommand(Command):
@@ -56,7 +56,7 @@ class TypecheckCommand(Command):
             print("Success: Mypy hasn't discovered any problem.")
 
 
-class BuildCommand(Command):
+class CompileCommand(Command):
     """Compile Pamm fortran code."""
     description = 'Compile pamm fortan code.'
     user_options = []
@@ -94,7 +94,7 @@ setup(
     cmdclass={
         'typecheck': TypecheckCommand,
         'clean': CleanCommand,
-        'build': BuildCommand
+        'compile': CompileCommand
 
     }
 )
