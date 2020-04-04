@@ -48,7 +48,7 @@ docker build -t gmplabtools .
 Running image is pretty straight forward. Following command opens containers terminal.
 
 ```
-docker run --rm -it gmplabtools
+docker run --rm -it -v $PWD:/home/gmplabtools gmplabtools
 ```
 
 We can also build a pamm by running
