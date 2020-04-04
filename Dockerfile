@@ -14,7 +14,8 @@ RUN apt-get update \
 
 ADD environment.yml /
 
-RUN conda env create --file /environment.yml
+RUN conda env create --file /environment.yml \
+    && conda clean --all -y
 
 RUN echo "source activate gmplabtools" > ~/.bashrc \
     && mkdir /home/gmplabtools \
@@ -22,7 +23,5 @@ RUN echo "source activate gmplabtools" > ~/.bashrc \
     && ln -s ${CONDA_ENV_PREFIX}/lib/libblas.so /usr/lib/libblas.so
 
 WORKDIR /home/gmplabtools
-
-ADD . /home/gmplabtools
 
 CMD [ "/bin/bash" ]
