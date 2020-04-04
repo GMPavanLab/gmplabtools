@@ -85,7 +85,7 @@ ENV/
 # Spyder project settings
 .spyderproject
 
-# IDE's
+# IDEs
 .idea/
 .vscode/
 
