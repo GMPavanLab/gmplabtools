@@ -30,6 +30,9 @@ def oracle_shrinkage(cov, size):
 
 
 class Gauss:
+    """
+    Class that wraps a normally distibuted random variable.
+    """
     def __init__(self, mean, cov):
         self.mean = mean
         self.cov = cov

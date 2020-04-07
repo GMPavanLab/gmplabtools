@@ -11,13 +11,13 @@ logging.getLogger(__name__).setLevel(level=logging.INFO)
 
 class PammCommander:
     """
-    Class that allow to interact with pamm and parse the results into python.
+    Class that allows to interact with pamm and parse the results into python.
     """
     BIN_PATH = os.path.dirname(__file__) + "/bin/pamm"
 
     INPUT_FIELDS = (
         "d", "bootstrap", "fpoints", "fspread", "qs",
-        "o", "readgrid", "trajectory", "nms", "ngrid", "z",
+        "o", "gridfile", "trajectory", "nms", "ngrid", "z",
         "merger"
     )
 
@@ -43,14 +43,14 @@ class PammCommander:
             pamm_command[k] = self.input_dict.get(k, None)
 
         if not ((pamm_command["fspread"] is None) ^ (pamm_command["fpoints"] is None)):
-            raise ValueError("Cannot provide both `fspread` and `fpoints` values.")
+            raise ValueError("Must provide only one between `fspread` and `fpoints`.")
 
-        if pamm_command["readgrid"] is not None:
-            if not os.path.isfile(pamm_command["readgrid"]):
-                raise ValueError("Grid file {} was not found.".format(pamm_command["readgrid"]))
+        if pamm_command["gridfile"] is not None:
+            if not os.path.isfile(pamm_command["gridfile"]):
+                raise ValueError("Grid file `{}` was not found.".format(pamm_command["gridfile"]))
 
         if not os.path.isfile(pamm_command["trajectory"]):
-            raise ValueError("Trajectory {} was not found.".format(pamm_command["trajectory"]))
+            raise ValueError("Trajectory `{}` was not found.".format(pamm_command["trajectory"]))
 
         fields = [k for k, v in pamm_command.items() if v is not None and k != "trajectory"]
         command = "{exec} {args} {verbose} < {input_traj}".format(
@@ -89,6 +89,9 @@ class PammCommander:
         return "{}.{}".format(self.input_dict["o"], "weights")
 
     def read_output(self):
+        """
+        Methods that reads back the pamm output as numpy array anc create attributes.
+        """
         if os.path.isfile(self.bootstrap_file):
             bs =  np.loadtxt(self.bootstrap_file).astype(int)
             setattr(self, "bs", bs)

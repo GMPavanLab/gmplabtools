@@ -4,7 +4,7 @@ import scipy.sparse.csgraph as csg
 
 def adjacency(prob, clusters, boot):
     """
-    Calculated the adjacency matrix from a boostrapped clustering procedure.
+    Calculated the adjacency matrix from a bootstrapped clustering procedure.
 
     Args:
         prob: Cluster probabilities for each gridpoint.
@@ -37,7 +37,7 @@ def adjacency(prob, clusters, boot):
             icls = np.where(boot[bs] == i)[0]
             QA[bs, i] = np.exp(prob[icls]).sum()
 
-    # probability of each in global cluster i of being in boostrap cluster j
+    # probability of each in global cluster i of being in bootstrap cluster j
     QAi = np.zeros((nbs, max(nclsbs), ncls)) + 1e-6
     for bs in np.arange(nbs):
         for i in np.arange(nclsbs[bs]):
@@ -75,7 +75,7 @@ def merge(adjacency, cluster_mapping, threshold):
     Returns:
         Array of distances from y, cluster mapping.
     """
-    N = sum(map(list, cluster_mapping), []) # number of gridpoints
+    N = len(sum(map(list, cluster_mapping), [])) # number of gridpoints
     imacro = np.ones(N, dtype=int) * -1
 
     # for the terms above a given threshold, find connected sub-graphs
