@@ -95,6 +95,5 @@ setup(
         'typecheck': TypecheckCommand,
         'clean': CleanCommand,
         'compile': CompileCommand
-
     }
 )

@@ -3,8 +3,8 @@ import json
 
 import numpy as np
 
-from gmplabtools.pamm.lib.dimensionality import DataSampler     
-from gmplabtools.pamm.pamm_commander import PammCommander  
+from gmplabtools.pamm.lib.dimensionality import DataSampler
+from gmplabtools.pamm.pamm_commander import PammCommander
 
 from config import get_config
 
@@ -15,7 +15,7 @@ def main(config):
     np.random.shuffle(x)
 
     if config.generate_grid:
-        d = DataSampler(config.distance, norm=config.p)   
+        d = DataSampler(config.distance, norm=config.p)
         grid, indices = d.minmax_sample(x, config.size)
         np.savetxt("{}.grid".format(config.savegrid), indices + 1, fmt="%d")
 
