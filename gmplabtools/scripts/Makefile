@@ -11,5 +11,5 @@ predict:
 	python predict.py -c config.json
 
 clean:
-	rm *.png *.grid *.weights *.pca *.txt *.pamm
+	rm -f *.png *.grid *.weights *.pca *.txt *.pamm
 

@@ -1,29 +1,21 @@
 import argparse
-import json
-import numpy as np
 
+import numpy as np
 from ase.io import read
 from dscribe.descriptors import SOAP
-
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
-from sklearn.decomposition import PCA, KernelPCA
-
+from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 from config import get_config
 
-bgn = str(0)
-end = str(2000)
-strd = str(1)
 
 def read_traj(filename, index=":", start=None, end=None, stride=None):
     if all([start, end, stride]):
         index = "{}:{}:{}".format(start, end, stride),
-    return read(filename,
-                index=index,
-                format="xyz")
+    return read(filename, index=index, format="xyz")
+
 
 def plot(pca, fname):
     plt.figure(figsize=(11, 8), dpi=80)
@@ -35,6 +27,7 @@ def plot(pca, fname):
     plt.colorbar()
     plt.savefig(fname)
     plt.close()
+
 
 def main(config):
     traj = {name: read_traj(traj) for name, traj in config.trajectories}
