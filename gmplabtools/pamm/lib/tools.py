@@ -33,6 +33,8 @@ class Gauss:
     """
     Class that wraps a normally distibuted random variable.
     """
+    MIN_VALUE = 1E-20
+
     def __init__(self, mean, cov):
         self.mean = mean
         self.cov = cov
@@ -44,7 +46,7 @@ class Gauss:
 
     def cov_det(self):
         det = np.linalg.det(self.cov)
-        return max(det, 1E-10)
+        return max(det, MIN_VALUE)
 
     def logpdf(self, x):
         shift = x - self.mean
