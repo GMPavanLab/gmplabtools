@@ -27,6 +27,7 @@ dependencies:
   - scipy=1.4.1
   - seaborn=0.10.0
   - setuptools
+  - toml=0.10.0
   - wheel
   - pip:
     - fst-pso==1.7.10
