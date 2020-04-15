@@ -34,6 +34,7 @@ class Gauss:
     Class that wraps a normally distibuted random variable.
     """
     MIN_VALUE = 1E-20
+    LOGP0 = -1E100
 
     def __init__(self, mean, cov):
         self.mean = mean
@@ -44,15 +45,22 @@ class Gauss:
     def dim(self):
         return len(self.mean)
 
+    @property
+    def _valid_covariance(self):
+        return np.isnan(self.cov).sum() == 0
+
     def cov_det(self):
         det = np.linalg.det(self.cov)
-        return max(det, MIN_VALUE)
+        return max(det, Gauss.MIN_VALUE)
 
     def logpdf(self, x):
-        shift = x - self.mean
-        a = -np.log(((2 * np.pi) ** self.dim * self._cov_det) ** 0.5)
-        b = np.dot(np.dot(shift, np.linalg.inv(self.cov)), shift)
-        return a - 0.5 * b
+        if self._valid_covariance:
+            shift = x - self.mean
+            a = -np.log(((2 * np.pi) ** self.dim * self._cov_det) ** 0.5)
+            b = np.dot(np.dot(shift, np.linalg.inv(self.cov)), shift)
+            return a - 0.5 * b
+        else:
+            return Gauss.LOGP0
 
     def pdf(self, x):
         return np.exp(self.logpdf(x))
@@ -90,7 +98,7 @@ class GMMPredict:
             raise FileNotFoundError("File {} not found.".format(filename))
         else:
             pk, means, cov, = [], [], []
-            skipped = []
+            zeros = []
             for i, line in enumerate(open(filename, 'r').readlines()):
                 if i == 2:
                     D, n_cluster = map(int, line.split())
@@ -102,7 +110,9 @@ class GMMPredict:
                         means.append(m)
                         cov.append(oracle_shrinkage(c, D))
                     else:
-                        skipped.append(str(i - 2))
-            if skipped:
-                logging.info("Skipped {} clusters: {}".format(len(skipped), ", ".join(skipped)))
+                        zeros.append(str(i - 2))
+            if zeros:
+                msg = ("There are {} clusters with null"
+                       " covariance: {}".format(len(zeros), ", ".join(zeros)))
+                logging.info(msg)
             return cls(pk, means, cov)
