@@ -105,11 +105,11 @@ class GMMPredict:
                 if i > 2:
                     values = list(map(float, line.split()))
                     p, m, c = values[0], np.array(values[1:1 + D]), np.array(values[1 + D:]).reshape((D, D))
-                    if np.isnan(c).sum() == 0:
-                        pk.append(p)
-                        means.append(m)
-                        cov.append(oracle_shrinkage(c, D))
-                    else:
+                    pk.append(p)
+                    means.append(m)
+                    cov.append(oracle_shrinkage(c, D))
+
+                    if np.isnan(c).sum() != 0:
                         zeros.append(str(i - 2))
             if zeros:
                 msg = ("There are {} clusters with null"
