@@ -2,13 +2,13 @@
 all: transform cluster predict
 
 transform:
-	python transform.py -c config.json
+	python transform.py -c config.toml
 	
 cluster:
-	python cluster.py -c config.json
+	python cluster.py -c config.toml
 
 predict:
-	python predict.py -c config.json
+	python predict.py -c config.toml
 
 clean:
 	rm -f *.png *.grid *.weights *.pca *.txt *.pamm

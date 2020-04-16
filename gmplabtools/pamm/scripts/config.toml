@@ -30,7 +30,10 @@ qs = 1
 o = "pamm"
 trajectory = "allsoap.pca"
 readgrid = "grid"
-merger = 0.01
+merger = 0.005
+bootstrap = 128
+
+[cluster.dendrogram]
 
 [predict]
 extrapolate_on_files = ["C1soap.pca", "C5soap.pca", "N0soap.pca"]

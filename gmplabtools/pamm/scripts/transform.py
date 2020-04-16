@@ -30,7 +30,7 @@ def plot(pca, fname):
 
 
 def main(config):
-    traj = {name: read_traj(traj) for name, traj in config.trajectories}
+    traj = {name: read_traj(traj) for name, traj in config.trajectories.items()}
 
     if hasattr(config, "full_traj"):
         all_traj = read_traj(config.full_traj)
