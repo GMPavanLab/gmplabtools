@@ -26,6 +26,13 @@ class PammCommander:
         self.run_status = None
         self.verbose = verbose
 
+        self.p = None
+        self.grid = None
+        self.cluster = None
+        self.weights = None
+        self.gmm = None
+        self.bs = None
+
     @property
     def command_parser(self):
         return self.format()
@@ -73,51 +80,51 @@ class PammCommander:
         return self
 
     @property
-    def bootstrap_file(self):
+    def _bootstrap_file(self):
         return "{}.{}".format(self.input_dict["o"], "bs")
 
     @property
-    def pamm_file(self):
+    def _pamm_file(self):
         return "{}.{}".format(self.input_dict["o"], "pamm")
 
     @property
-    def grid_file(self):
+    def _grid_file(self):
         return "{}.{}".format(self.input_dict["o"], "grid")
 
     @property
-    def weights_file(self):
+    def _weights_file(self):
         return "{}.{}".format(self.input_dict["o"], "weights")
 
     def read_output(self):
         """
         Methods that reads back the pamm output as numpy array anc create attributes.
         """
-        if os.path.isfile(self.bootstrap_file):
-            bs =  np.loadtxt(self.bootstrap_file).astype(int)
+        if os.path.isfile(self._bootstrap_file):
+            bs =  np.loadtxt(self._bootstrap_file).astype(int)
             setattr(self, "bs", bs)
         else:
-            msg = "Bootstrap output file {} was not found.".format(self.bootstrap_file)
+            msg = "Bootstrap output file {} was not found.".format(self._bootstrap_file)
             FileNotFoundError(msg)
 
-        if os.path.isfile(self.pamm_file):
-            gmm =  GMMPredict.read_clusters(self.pamm_file)
+        if os.path.isfile(self._pamm_file):
+            gmm =  GMMPredict.read_clusters(self._pamm_file)
             setattr(self, "gmm", gmm)
         else:
-            msg = "Parameter output file {} was not found.".format(self.pamm_file)
+            msg = "Parameter output file {} was not found.".format(self._pamm_file)
             FileNotFoundError(msg)
 
-        if os.path.isfile(self.grid_file):
-            grid =  np.loadtxt(self.grid_file)
+        if os.path.isfile(self._grid_file):
+            grid =  np.loadtxt(self._grid_file)
             setattr(self, "grid", grid[:, :self.dimension])
             setattr(self, "cluster", grid[:, self.dimension].astype(int))
             setattr(self, "p", grid[:, self.dimension + 1])
         else:
-            msg = "Parameter output file {} was not found.".format(self.grid_file)
+            msg = "Parameter output file {} was not found.".format(self._grid_file)
             FileNotFoundError(msg)
 
-        if os.path.isfile(self.weights_file):
-            weights =  np.loadtxt(self.weights_file)
+        if os.path.isfile(self._weights_file):
+            weights =  np.loadtxt(self._weights_file)
             setattr(self, "weights", weights)
         else:
-            msg = "Parameter output file {} was not found.".format(self.weights_file)
+            msg = "Parameter output file {} was not found.".format(self._weights_file)
             FileNotFoundError(msg)
