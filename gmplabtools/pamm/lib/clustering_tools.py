@@ -1,26 +1,29 @@
 import numpy as np
 import scipy.sparse.csgraph as csg
+from scipy.cluster.hierarchy import linkage
+from scipy.spatial.distance import squareform
 
 
-def adjacency(prob, clusters, boot):
+def calculate_adjacency(prob, clusters, bootstrap):
     """
     Calculated the adjacency matrix from a bootstrapped clustering procedure.
 
     Args:
         prob: Cluster probabilities for each gridpoint.
         clusters: Cluster label for each gridpoints.
-        boot: Bootstrap clustering data.
+        def calculate_adjacency(prob, clusters, bootstrap):
+: Bootstrap clustering data.
     Returns:
         Array of distances from y, clusters to gridpoints mapping
     """
     uc = np.unique(clusters)
     ncls = len(uc)
-    nbs = len(boot)
+    nbs = len(bootstrap)
     nclsbs = np.zeros(nbs, int)
 
     # maximum number of cluster per bootstrap run
     for bs in np.arange(nbs):
-        nclsbs[bs] = np.max(boot[bs]) + 1
+        nclsbs[bs] = np.max(bootstrap[bs]) + 1
 
     # probability of each cluster and cluster indices
     lcls = []
@@ -34,14 +37,14 @@ def adjacency(prob, clusters, boot):
     QA = np.zeros((nbs, max(nclsbs))) + 1e-6
     for bs in np.arange(nbs):
         for i in np.arange(nclsbs[bs]):
-            icls = np.where(boot[bs] == i)[0]
+            icls = np.where(bootstrap[bs] == i)[0]
             QA[bs, i] = np.exp(prob[icls]).sum()
 
     # probability of each in global cluster i of being in bootstrap cluster j
     QAi = np.zeros((nbs, max(nclsbs), ncls)) + 1e-6
     for bs in np.arange(nbs):
         for i in np.arange(nclsbs[bs]):
-            icls = np.where(boot[bs] == i)[0]
+            icls = np.where(bootstrap[bs] == i)[0]
             for j in np.arange(ncls):
                 inter = np.intersect1d(icls, lcls[j])
                 QAi[bs, i, j] = np.exp(prob[inter]).sum()
@@ -87,3 +90,26 @@ def merge(adjacency, cluster_mapping, threshold):
             if cc[1][j] == i:
                 imacro[cluster_mapping[j]] = i
     return imacro
+
+
+def adjancency_dendrogram(adjacency, link="warp"):
+    """
+    This function returns a square-form distance matrix used for building a
+    dendrogram based on the clusters' adjacency matrix
+    """
+    dist = np.ones(adjacency.shape) * np.inf
+    for i in range(adjacency.shape[0]):
+        for j in range(adjacency.shape[1]):
+            if adjacency[i, j] > 0:
+                dist[i, j] = -np.log(
+                    np.adjacency[i, j] / np.sqrt(adjacency[i, i] * np.adjacency[j, j])
+                )
+
+            # distance definition makes diagonal entries zero
+    np.fill_diagonal(dist, 0)
+
+    # set furthest distance to max in distance matrix
+    dist[dist == np.inf] = max(dist.flatten()[dist.flatten() != np.inf])
+
+    # single is the only way this distance matrix can be interpreted
+    return linkage(squareform(dist), link)
