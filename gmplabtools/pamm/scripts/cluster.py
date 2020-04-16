@@ -34,9 +34,8 @@ def main(config):
 
         z = adjancency_dendrogram(adjacency)
         fig, ax = plt.subplots()
-        dend = dendrogram(z, ax=ax, **get_config.dendrogram)['leaves']
-        print(dend)
-        fig.savefig('dendrogram.png')
+        _ = dendrogram(z, ax=ax, **config.dendrogram)['leaves']
+        fig.savefig('clusters_dendrogram.png')
 
 
 if __name__ == "__main__":

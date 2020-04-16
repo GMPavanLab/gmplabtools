@@ -92,24 +92,31 @@ def merge(adjacency, cluster_mapping, threshold):
     return imacro
 
 
-def adjancency_dendrogram(adjacency, link="warp"):
+def adjancency_dendrogram(adjacency, link="ward"):
     """
     This function returns a square-form distance matrix used for building a
     dendrogram based on the clusters' adjacency matrix
     """
-    dist = np.ones(adjacency.shape) * np.inf
+    dist = np.zeros(adjacency.shape)
     for i in range(adjacency.shape[0]):
         for j in range(adjacency.shape[1]):
             if adjacency[i, j] > 0:
                 dist[i, j] = -np.log(
-                    np.adjacency[i, j] / np.sqrt(adjacency[i, i] * np.adjacency[j, j])
+                    adjacency[i, j] / np.sqrt(adjacency[i, i] * adjacency[j, j])
                 )
 
-            # distance definition makes diagonal entries zero
-    np.fill_diagonal(dist, 0)
+    # copy lower triangular into upper triangular
+    dist = np.tril(dist).T + dist
 
     # set furthest distance to max in distance matrix
+    dist[dist == 0] = np.inf
     dist[dist == np.inf] = max(dist.flatten()[dist.flatten() != np.inf])
+
+    # distance definition makes diagonal entries zero
+    np.fill_diagonal(dist, 0)
+    for i in range(dist.shape[0]):
+        for j in range(dist.shape[0]):
+            print(i, j, dist[i, j] == dist[j, i])
 
     # single is the only way this distance matrix can be interpreted
     return linkage(squareform(dist), link)
