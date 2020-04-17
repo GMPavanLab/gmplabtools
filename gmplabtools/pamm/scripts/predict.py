@@ -22,7 +22,7 @@ def main(config):
         np.savetxt(f[:-4] + "_result.txt", save)
 
         rates = ClusterRates(40, "proba").calculate_matrix(clusters)
-        np.savetxt(rates + "_rates.txt", save)
+        np.savetxt(f[:-4] + "_rates.txt", rates)
 
 
 if __name__ == "__main__":

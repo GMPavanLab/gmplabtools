@@ -44,8 +44,6 @@ def main(config):
     soap = {name: soapDSC.create(k) for name, k in traj.items()}
     all_soap = soapDSC.create(all_traj)
 
-    np.savetxt("soap_example.txt", soap["C1"])
-
     print("DSCRIBE descriptor shapes:")
     msg = ", ".join(
         ["{}: {}".format(name, k.shape[0]) for name, k in soap.items()]
@@ -54,8 +52,7 @@ def main(config):
     print(msg)
 
     tranformer = make_pipeline(StandardScaler(), PCA(n_components=config.components))
-    # indices = np.arange(all_soap.shape[0])
-    # np.random.shuffle(indices)
+
     tranformer = tranformer.fit(all_soap)
 
     # calculate variance ratios on the merged data
@@ -68,6 +65,8 @@ def main(config):
 
     transformed = {name: tranformer.transform(k) for name, k in soap.items()}
     all_pca = tranformer.transform(all_soap)
+
+    np.savetxt("allsoap.pca", all_pca)
 
     for k, x in transformed.items():
         np.savetxt("{}soap.pca".format(k), x)
