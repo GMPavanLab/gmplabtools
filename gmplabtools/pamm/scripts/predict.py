@@ -3,14 +3,14 @@ import json
 
 import numpy as np
 
-from gmplabtools import PammCommander  
+from gmplabtools.pamm.lib.transition_rates import ClusterRates
 from gmplabtools.pamm.lib.tools import GMMPredict
 
 from config import get_config
 
     
 def main(config):
-    gmm = GMMPredict.read_clusters(config.pamm_output + '.pamm')
+    gmm = GMMPredict.read_clusters(config.pamm_output + ".pamm")
 
     print("There are {} clusters".format(np.unique(gmm.pk).shape[0]))
 
@@ -19,7 +19,11 @@ def main(config):
         x_ = gmm.predict_proba(x)
         clusters = np.argmax(x_, axis=1).reshape((-1, 1))
         save = np.hstack((x_, clusters))
-        np.savetxt(f[:-4] + '_result.txt', save)
+        np.savetxt(f[:-4] + "_result.txt", save)
+
+        rates = ClusterRates(40, "label").calculate_matrix(save[:, -1])
+        np.savetxt(f[:-4] + "_rates.txt", rates)
+
 
 if __name__ == "__main__":
 

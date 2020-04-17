@@ -6,7 +6,7 @@ class ClusterRates:
     Class that return clustering transition rate matrix
     """
 
-    def __init__(self, n, method='label'):
+    def __init__(self, n, method="label"):
         self.n = n
         self.clusters = None
         self.n_cluster = None
@@ -14,12 +14,12 @@ class ClusterRates:
 
     def _select_method(self):
         return {
-            'label': ClusterRates.matrix_update_cluster,
-            'proba': ClusterRates.matrix_update_proba
+            "label": ClusterRates.matrix_update_cluster,
+            "proba": ClusterRates.matrix_update_proba
         }[self.method]
 
     def _get_dimension(self, x):
-        if self.method == 'label':
+        if self.method == "label":
             clusters = np.unique(x)
         else:
             clusters = np.arange(x.shape[1], dtype=int)
@@ -37,7 +37,7 @@ class ClusterRates:
         """
         self.clusters, self.n_clusters = self._get_dimension(x)
 
-        if self.method == 'label':
+        if self.method == "label":
             _x = x.reshape((int(x.shape[0] / self.n), self.n))
         else:
             _x = x.reshape((int(x.shape[0] / self.n), self.n, self.n_clusters))
