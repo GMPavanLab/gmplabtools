@@ -114,9 +114,6 @@ def adjancency_dendrogram(adjacency, link="ward"):
 
     # distance definition makes diagonal entries zero
     np.fill_diagonal(dist, 0)
-    for i in range(dist.shape[0]):
-        for j in range(dist.shape[0]):
-            print(i, j, dist[i, j] == dist[j, i])
 
     # single is the only way this distance matrix can be interpreted
     return linkage(squareform(dist), link)
