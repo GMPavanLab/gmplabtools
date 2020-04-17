@@ -69,8 +69,6 @@ def main(config):
     transformed = {name: tranformer.transform(k) for name, k in soap.items()}
     all_pca = tranformer.transform(all_soap)
 
-    np.savetxt("allsoap.pca", all_pca)
-
     for k, x in transformed.items():
         np.savetxt("{}soap.pca".format(k), x)
         
