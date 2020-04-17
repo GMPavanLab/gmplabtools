@@ -21,7 +21,7 @@ def main(config):
         save = np.hstack((x_, clusters))
         np.savetxt(f[:-4] + "_result.txt", save)
 
-        rates = ClusterRates(40, "proba").calculate_matrix(clusters)
+        rates = ClusterRates(40, "label").calculate_matrix(save[:, -1])
         np.savetxt(f[:-4] + "_rates.txt", rates)
 
 
