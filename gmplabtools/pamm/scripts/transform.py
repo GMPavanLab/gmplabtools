@@ -5,7 +5,7 @@ from ase.io import read
 from dscribe.descriptors import SOAP
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, KernelPCA
 import matplotlib.pyplot as plt
 
 from config import get_config
@@ -51,7 +51,7 @@ def main(config):
     print(all_soap.shape)
     print(msg)
 
-    tranformer = make_pipeline(StandardScaler(), PCA(n_components=config.components))
+    tranformer = make_pipeline(PCA(n_components=config.components))
 
     tranformer = tranformer.fit(all_soap)
 
