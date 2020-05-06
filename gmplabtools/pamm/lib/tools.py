@@ -90,7 +90,7 @@ class GMMPredict:
         return  prob / np.sum(prob, axis=1).reshape((-1, 1))
 
     @classmethod
-    def read_clusters(cls, filename):
+    def read_clusters(cls, filename, grid_file=None, bootstrap_file=None):
         """
         Read pamm output parameter and return an instance of GMMPredict class.
         """
@@ -111,8 +111,27 @@ class GMMPredict:
 
                     if np.isnan(c).sum() != 0:
                         zeros.append(str(i - 2))
+
+            predict = cls(pk, means, cov)
+
+            if grid_file is not None:
+                if not os.path.isfile(grid_file):
+                    raise FileNotFoundError("File {} not found.".format(grid_file))
+                else:
+                    grid = np.loadtxt(grid_file)
+                    setattr(predict, "grid", grid[:, :D])
+                    setattr(predict, "cluster", grid[:, D].astype(int))
+                    setattr(predict, "p", grid[:, D + 1])
+
+            if bootstrap_file is not None:
+                if not os.path.isfile(bootstrap_file):
+                    raise FileNotFoundError("File {} not found.".format(bootstrap_file))
+                else:
+                    bs = np.loadtxt(bootstrap_file).astype(int)
+                    setattr(predict, "bs", bs)
+
             if zeros:
                 msg = ("There are {} clusters with null"
                        " covariance: {}".format(len(zeros), ", ".join(zeros)))
                 logging.info(msg)
-            return cls(pk, means, cov)
+            return predict
