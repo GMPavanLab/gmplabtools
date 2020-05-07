@@ -51,7 +51,7 @@ def main(config):
     print(all_soap.shape)
     print(msg)
 
-    tranformer = make_pipeline(StandardScaler(), PCA(n_components=config.components))
+    tranformer = make_pipeline(PCA(n_components=config.components))
 
     tranformer = tranformer.fit(all_soap)
 
