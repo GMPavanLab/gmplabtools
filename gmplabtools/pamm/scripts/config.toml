@@ -35,6 +35,10 @@ bootstrap = 128
 
 [cluster.dendrogram]
 
+[predict.extrapolate_on_files]
+C1 = "C1soap.pca"
+C5 = "C5soap.pca"
+N0 = "N0soap.pca"
+
 [predict]
-extrapolate_on_files = ["C1soap.pca", "C5soap.pca", "N0soap.pca"]
 pamm_output = "pamm"
