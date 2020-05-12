@@ -92,8 +92,8 @@ class PammCommander:
         return "{}.{}".format(self.input_dict["o"], "grid")
 
     @property
-    def _weights_file(self):
-        return "{}.{}".format(self.input_dict["o"], "weights")
+    def _dim_file(self):
+        return "{}.{}".format(self.input_dict["o"], "dim")
 
     def read_output(self):
         """
@@ -122,9 +122,9 @@ class PammCommander:
             msg = "Parameter output file {} was not found.".format(self._grid_file)
             FileNotFoundError(msg)
 
-        if os.path.isfile(self._weights_file):
-            weights =  np.loadtxt(self._weights_file)
-            setattr(self, "weights", weights)
+        if os.path.isfile(self._dim_file):
+            dim =  np.loadtxt(self._dim_file)
+            setattr(self, "dim", dim)
         else:
-            msg = "Parameter output file {} was not found.".format(self._weights_file)
+            msg = "Parameter output file {} was not found.".format(self._dim_file)
             FileNotFoundError(msg)

@@ -17,20 +17,20 @@ lmax = 8
 [cluster]
 trj_filename = "allsoap.pca"
 distance = "minkowski"
-size = 2000
+size = 1000
 p = 2
-generate_grid = false
+generate_grid = true
 savegrid = "grid"
 
 [cluster.pamm_input]
 d = 7
 fspread = 0.1
-ngrid = 2000
+ngrid = 1000
 qs = 1
 o = "pamm"
 trajectory = "allsoap.pca"
 readgrid = "grid"
-merger = 0.005
+merger = 0.01
 bootstrap = 128
 
 [cluster.dendrogram]
