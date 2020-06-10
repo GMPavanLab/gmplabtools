@@ -5,21 +5,10 @@ import pkgutil
 import io
 import numpy as np
 import pandas as pd
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, PackageLoader
 
+from .data.non_bonded import ORIGINAL
 
-ORIGINAL = {
-'sp1_c6': 0.85338E-01,
-'sp1_c12': 0.53946E-03,
-'sc1_c6': 0.66375E-01,
-'sc1_c12': 0.41957E-03,
-'sp1_sc1_c6': 0.51203E-01,
-'sp1_sc1_c12': 0.32367E-03,
-'pol_sp1_c6': 0.16384E-00,
-'pol_sp1_c12': 0.17660E-02,
-'pol_sc1_c6': 5.17398E-02,
-'pol_sc1_c12': 5.57718E-04,
-}
 
 def cache():
 	def wrapper(method):
