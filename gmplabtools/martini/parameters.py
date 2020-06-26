@@ -7,22 +7,22 @@ import numpy as np
 import pandas as pd
 from jinja2 import Environment, PackageLoader
 
-from .data.non_bonded import ORIGINAL
+from gmplabtools.martini.data.non_bonded import ORIGINAL
 
 
 def cache():
 	def wrapper(method):
 		@functools.wraps(method)
 		def wrapped(self, *args, **kwargs):
-		    return method(self, *args, **kwargs)
+			return method(self, *args, **kwargs)
 		return functools.lru_cache(maxsize=1)(wrapped)
 	return wrapper
 
 
 class Martini(SimpleNamespace):
 
-    def __init__(self, **kwargs):
-        super().__init__(**{**ORIGINAL, **kwargs})
+	def __init__(self, **kwargs):
+		super().__init__(**{**ORIGINAL, **kwargs})
 
     @property
     def env(self):
@@ -70,7 +70,7 @@ class Param:
 	def min(self, field, subset=None):
 		mask = self.df[field] > 0
 		if subset is not None:
-		    mask &= self.df['type'] == subset
+			mask &= self.df['type'] == subset
 		return self.df.loc[mask, field].min()
 
 	def max(self, field, subset=None):

@@ -84,7 +84,7 @@ class Simulation:
         return Simulation.RUN_CMD.format(**{**self.param_dict, **kwargs})
 
     def _run(self, command):
-        call = subprocess.run(command.split(), stdout=subprocess.PIPE)
+        _ = subprocess.run(command.split(), stdout=subprocess.PIPE)
         return self
 
     def prepare(self, **kwargs):

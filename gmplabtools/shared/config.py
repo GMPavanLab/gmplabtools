@@ -1,12 +1,9 @@
 import json
 from types import SimpleNamespace
-
 import toml
-
 
 class WrongConfigFormat(Exception):
     pass
-
 
 def get_config(filename, section=None) -> SimpleNamespace:
     with open(filename, 'r') as f:

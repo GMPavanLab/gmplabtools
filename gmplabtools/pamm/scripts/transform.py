@@ -3,12 +3,11 @@ import argparse
 import numpy as np
 from ase.io import read
 from dscribe.descriptors import SOAP
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
-from sklearn.decomposition import PCA, KernelPCA
+from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-from config import get_config
+from gmplabtools.shared.config import get_config
 
 
 def read_traj(filename, index=":", start=None, end=None, stride=None):
