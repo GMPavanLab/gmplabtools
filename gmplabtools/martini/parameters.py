@@ -53,7 +53,7 @@ class Param:
         'super repulsive': 9
     }
 
-    def __init__(self, fields, parameter_file):
+    def __init__(self, fields, parameter_file=None):
         self.fields = fields
         self.parameter_file = parameter_file
         self.f = self.interp()
@@ -86,14 +86,15 @@ class Param:
         df = self.df
         n = df.shape[0]
         x, y = df['c6'].values, df['c12'].values
-        m =  (np.sum(x * y) * n - x.sum() * y.sum()) / (n * (x ** 2).sum() - x.sum() ** 2)
+        m = (np.sum(x * y) * n - x.sum() * y.sum()) / (n * (x ** 2).sum() - x.sum() ** 2)
         b = y.mean() - m * x.mean()
         return lambda x: x * m + b
 
     def __call__(self, subset=None):
-        m, M = self.min(field='c6', subset=subset), self.max(field='c6', subset=subset)
-        c6 = np.random.uniform(m, M)
-        return c6, self.f(c6)
+        for param in self.fields:
+            m, M = self.min(field='c6', subset=subset), self.max(field='c6', subset=subset)
+            c6 = np.random.uniform(m, M)
+            yield param, c6
 
     def __iter__(self):
         params_samples = np.loadtxt(self.parameter_file)
