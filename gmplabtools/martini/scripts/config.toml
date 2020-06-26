@@ -5,8 +5,8 @@ gpu_id = 3
 
 [params]
 template = 'martini.tmpl'
-method = 'random'
-fields = ['P4_SP1', 'POL_SC1']
+fields = ['P4_SP1', 'P4_SC1']
+param_range = './sim_data/filename.txt'
 
 [files]
 gro = './sim_data/start.gro'

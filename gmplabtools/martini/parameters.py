@@ -24,9 +24,9 @@ class Martini(SimpleNamespace):
 	def __init__(self, **kwargs):
 		super().__init__(**{**ORIGINAL, **kwargs})
 
-    @property
+	@property
     def env(self):
-        package_loader = PackageLoader(__name__, 'sim_data')
+        package_loader = PackageLoader(__name__, 'data/sim_data')
         templateEnv = Environment(
             loader=package_loader,
         )
@@ -52,7 +52,9 @@ class Param:
 		'super repulsive': 9
 	}
 
-	def __init__(self):
+	def __init__(self, fields, parameter_file):
+		self.fields = fields
+		self.parameter_file = parameter_file
 		self.f = self.interp()
 
 	@classmethod
@@ -92,13 +94,17 @@ class Param:
 		c6 = np.random.uniform(m, M)
 		return c6, self.f(c6)
 
+	def __iter__(self):
+		params_samples = np.loadtxt(self.parameter_file)
+		for params in params_samples:
+			yield zip(self.fields, params)
 
-def init_params(fields):
-	params = Param()
-	new_params = {}
-	for ljparam in fields:
-		vals = params()
-		new_params[ljparam + '_c6'] = vals[0]
-		new_params[ljparam + '_c12'] = vals[1]
-
-	return {**ORIGINAL, **new_params}
+	@classmethod
+	def set_config(cls, parameter_file):
+		instance = cls(parameter_file)
+		for params_set in instance:
+			new_params = {}
+			for ljparam, value in params_set:
+				new_params[ljparam + '_c6'] = value
+				new_params[ljparam + '_c12'] = instance.f(value)
+			yield new_params

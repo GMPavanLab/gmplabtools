@@ -4,7 +4,7 @@ import subprocess
 import datetime
 from shutil import copyfile
 
-from .parameters import Martini, init_params
+from .parameters import Martini, Param
 
 THIS_PACKAGE = __file__
 
@@ -17,39 +17,44 @@ class SetupSim:
         self.config = config
         self.pwd = THIS_PACKAGE
         self.cwd = os.getcwd()
-        self.run_time = datetime.datetime.now().strftime(SetupSim.FORMAT)
+        self.run_time = ''
 
     @property
     def simulation(self):
+        if not self.run_time:
+            msg = 'The `run_time` attribute was not set and simulation setup can not be generated.'
+            raise ValueError(msg)
         return 'simulation_{run_time}'.format(run_time=self.run_time)
 
     @property
     def full_path(self):
         return os.path.join(self.cwd, self.simulation)
 
-    def _create_path(self):
+    def _init_path(self):
+        self.run_time = datetime.datetime.now().strftime(SetupSim.FORMAT)
         if not os.path.isdir(self.full_path):
             os.mkdir(self.full_path)
         else:
             raise ValueError("Path {} already exists".format(self.full_path))
         return self
 
-    def _create_template(self):
-        params = init_params(self.config.params['fields'])
-        template = Martini(**params).get_template(self.config.params['template'])
+    def _init_template(self, config):
+        template = Martini(**config).get_template(self.config.params['template'])
         template_file = os.path.join(self.full_path, 'martini.itp')
+        return template_file, template
+
+    def _generate_simulation(self, params):
+        template_file, template = self._init_template(params)
         with open(template_file, 'w') as f:
             f.write(template)
-        return json.dumps(params)
 
-    def _copy_files(self):
         sim_config = {}
         for k, f in self.config.files.items():
             destination = os.path.join(self.full_path, os.path.basename(f))
             copyfile(f, destination)
             sim_config[k] = destination
 
-        sim_config['sim_params'] = self._create_template()
+        sim_config['sim_params'] = template
         sim_config['md_input'] = os.path.join(self.full_path, 'md_input')
         sim_config['md_output'] = os.path.join(self.full_path, 'md_output')
         sim_config.update(self.config.__dict__['simulation'])
@@ -65,8 +70,11 @@ class SetupSim:
         )
         return sim_config
 
-    def setup(self):
-        return Simulation(self._create_path()._copy_files())
+    def __iter__(self):
+        for params in Param.set_config(self.config.params.parameter_file):
+            self._init_path()
+            sim_config = self._generate_simulation(params)
+            yield Simulation(**sim_config)
 
 
 class Simulation:
