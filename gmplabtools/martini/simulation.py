@@ -54,7 +54,7 @@ class SetupSim:
             copyfile(f, destination)
             sim_config[k] = destination
 
-        sim_config['sim_params'] = template
+        sim_config['sim_params'] = params
         sim_config['md_input'] = os.path.join(self.full_path, 'md_input')
         sim_config['md_output'] = os.path.join(self.full_path, 'md_output')
         sim_config.update(self.config.__dict__['simulation'])
@@ -71,10 +71,11 @@ class SetupSim:
         return sim_config
 
     def __iter__(self):
-        for params in Param.set_config(self.config.params.parameter_file):
+        for params in Param.set_config(self.config.params['fields'],
+                                       self.config.params['parameter_file']):
             self._init_path()
             sim_config = self._generate_simulation(params)
-            yield Simulation(**sim_config)
+            yield Simulation(sim_config)
 
 
 class Simulation:
