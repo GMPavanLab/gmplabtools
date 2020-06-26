@@ -3,10 +3,9 @@ import json
 
 import numpy as np
 
+from gmplabtools.shared.config import get_config
 from gmplabtools.pamm.lib.transition_rates import ClusterRates
 from gmplabtools.pamm.lib.tools import GMMPredict
-
-from config import get_config
 
     
 def main(config):

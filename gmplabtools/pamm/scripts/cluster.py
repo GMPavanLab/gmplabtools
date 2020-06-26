@@ -4,11 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
+from gmplabtools.shared.config import get_config
 from gmplabtools.pamm.lib.dimensionality import DataSampler
 from gmplabtools.pamm.pamm_commander import PammCommander
 from gmplabtools.pamm.lib.clustering_tools import calculate_adjacency, adjancency_dendrogram
-
-from config import get_config
 
 
 def main(config):

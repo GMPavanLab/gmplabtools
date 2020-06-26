@@ -1,0 +1,10 @@
+#include "martini.itp"
+#include "bta.itp"
+
+[ system ]
+Single BTA CG W in water
+
+[ molecules ]
+; Compound	nmols
+BTA		80
+W               23360

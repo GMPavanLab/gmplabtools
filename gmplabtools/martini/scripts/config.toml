@@ -1,0 +1,16 @@
+[simulation]
+exec = 'gmx_2018.6_p'
+n_cpu = 9
+gpu_id = 3
+
+[params]
+template = 'martini.tmpl'
+fields = ['P4_SP1', 'P4_SC1']
+param_range = './sim_data/filename.txt'
+
+[files]
+gro = './sim_data/start.gro'
+mdp = './sim_data/md.mdp'
+top = './sim_data/topol.top'
+itp = './sim_data/bta.itp'
+index = './sim_data/index.ndx'
