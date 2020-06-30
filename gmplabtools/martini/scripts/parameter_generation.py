@@ -14,7 +14,7 @@ def main(config, n, res):
 
     if res is not None:
         data = np.loadtxt(res)
-        opt = Optimizer([Real(0, 0.25), Real(0, 0.25)],
+        opt = Optimizer([Real(0.03, 0.25), Real(0.03, 0.25)],
                         base_estimator="gp",
                         acq_optimizer="auto")
 
