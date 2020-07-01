@@ -2,6 +2,7 @@ name: gmplabtools
 channels:
   - conda-forge
 dependencies:
+  - skopt
   - ase=3.19.0
   - cycler=0.10.0
   - dscribe=0.3.4  # 0.3.5 available for linux
