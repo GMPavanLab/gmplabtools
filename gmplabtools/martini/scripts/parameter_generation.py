@@ -21,7 +21,7 @@ def main(config, n, res):
         y = list(data[:, :dim])
         x = [list(row[:dim]) for row in data]
         opt.tell(x, y)
-        parameter_list = opt.ask(n)
+        parameter_list = opt.ask(n, strategy='cl_mean')
     else:
         parameter_list = []
         for i in range(n):
