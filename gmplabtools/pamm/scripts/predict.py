@@ -13,14 +13,14 @@ def main(config):
 
     print("There are {} clusters".format(np.unique(gmm.pk).shape[0]))
 
-    for f in config.extrapolate_on_files.items():
+    for k,f in config.extrapolate_on_files.items():
         x = np.loadtxt(f)
         x_ = gmm.predict_proba(x)
         clusters = np.argmax(x_, axis=1).reshape((-1, 1))
         save = np.hstack((x_, clusters))
         np.savetxt(f[:-4] + "_result.txt", save)
 
-        rates = ClusterRates(40, "label").calculate_matrix(save[:, -1])
+        rates = ClusterRates(config.size[k], "label").calculate_matrix(save[:, -1])
         np.savetxt(f[:-4] + "_rates.txt", rates)
 
 
