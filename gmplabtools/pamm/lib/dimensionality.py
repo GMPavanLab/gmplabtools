@@ -186,22 +186,24 @@ class DataSampler:
             idxs = idxs[:n]
             return x[idxs], idxs
 
-    def minmax_sample(self, x, n, dedub=False):
+    def minmax_sample(self, x, n, dedup=True, dedupe_first_n_rows=5):
         """
         Generate a random sample of the dataset using a minmax strategy.
 
         Args:
             x: Original dataset.
             n: Size of the sample
-            dedup: De-duplicata datapoints
+            dedup: Whether to deput dataset
+            dedupe_first_n_rows: Number of rows to use for deduping
 
         Returns:
             Sampled dataset, index wrt origin dataset.
         """
         d = x.shape[1]
         # retrive index of unique values
-        if dedub:
-            _, idxs = np.unique(list(map(str, x)), return_index=True)
+        if dedup:
+            dedupe_first_n_rows = min(d, dedupe_first_n_rows)
+            _, idxs = np.unique(list(map(str, x[:,:dedupe_first_n_rows])), return_index=True)
         else:
             idxs = np.arange(d)
 
