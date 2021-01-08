@@ -62,7 +62,7 @@ class Dimension:
 
     def local_dimension(self, i):
         return Dimension.cov_dim(self.get_cov(i))
-    
+
     @staticmethod
     def cov_dim(cov):
         """
@@ -162,20 +162,21 @@ class DataSampler:
         return np.sqrt(np.sum((x - y) * np.matmul(x - y, local_cov_inv), axis=1))
 
     @staticmethod
-    def random_sample(x, n, keep_duplicates=False):
+    def random_sample(x, n, dedup=True, dedupe_first_n_rows=5):
         """
         Generate a random sample of the dataset.
         Args:
-            x: Original dataset.
+            x: Original dataset
             n: Size of the sample
-            keep_duplicates: Whether to keep duplicated values.
+            dedup: Whether to deput dataset
+            dedupe_first_n_rows: Number of rows to use for deduping
 
         Returns:
             Sampled dataset.
         """
         # retrive index of unique values
-        _, idxs = np.unique(list(map(str, x)), return_index=True)
-        if not keep_duplicates:
+        if dedup:
+            _, idxs = np.unique(list(map(str, x[:,:dedupe_first_n_rows])), return_index=True)
             x = x[idxs]
             np.random.shuffle(idxs)
             idxs = idxs[:n]
@@ -191,7 +192,7 @@ class DataSampler:
         Generate a random sample of the dataset using a minmax strategy.
 
         Args:
-            x: Original dataset.
+            x: Original dataset
             n: Size of the sample
             dedup: Whether to deput dataset
             dedupe_first_n_rows: Number of rows to use for deduping
