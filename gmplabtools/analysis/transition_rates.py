@@ -59,7 +59,7 @@ class ClusterRates:
     @staticmethod
     def matrix_update_cluster(v, w, clusters, n):
         """
-        Calculates transition matrix updates for two consecity frames
+        Calculates transition matrix updates for two consecutive frames
 
         Args:
             v: Frame of trajectory.

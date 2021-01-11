@@ -1,15 +1,30 @@
-import logging
-
 import numpy as np
-from scipy.special import gamma
-
-from gmplabtools.pamm.lib.tools import oracle_shrinkage
+from scipy.special._ufuncs import gamma
 
 
-logging.getLogger(__name__).setLevel(level=logging.INFO)
+def oracle_shrinkage(cov, size):
+    """
+    Perform covariance matrix regularisation using oracle shrinkage.
+
+    Args:
+        cov: Covariance matrix.
+        size: Original dataset size.
+
+    Returns:
+        Regularized covariance.
+    """
+    d = 1 if len(cov.shape) < 2 else cov.shape[1]
+
+    # apply oracle approximating shrinkage alogorithm on local Q
+    num = (1 - 2 / d) * np.trace(cov ** 2) + np.trace(cov) ** 2
+    den = (size + 1. - 2 / d) * np.trace(cov ** 2) - np.trace(cov) ** 2 / d
+    b = min(1, num / den)
+
+    # regularized local covariance matrix for grid point
+    return (1. - b) * cov + b * np.trace(cov) * np.identity(int(d)) / d
 
 
-class Dimension:
+class CovDim:
     """
     This class calculate a local covariance matrix for every points in a dataset.
     """
@@ -41,7 +56,7 @@ class Dimension:
 
         The coviariance bit could also be done as np.cov(X.T, weights=ui)
         """
-        ui = Dimension.gauss_local(y, x, sigma)
+        ui = CovDim.gauss_local(y, x, sigma)
         Ni = np.sum(ui)
         cov = np.empty((x.shape[1], x.shape[1])) * 0
         for i in range(x.shape[1]):
@@ -56,12 +71,12 @@ class Dimension:
         """
         Calculate the covariance matrix.
         """
-        values = Dimension.local_cov(self.data[i], self.data, self.sigma)
+        values = CovDim.local_cov(self.data[i], self.data, self.sigma)
         self.localisation = values[1]
         return values[0]
 
     def local_dimension(self, i):
-        return Dimension.cov_dim(self.get_cov(i))
+        return CovDim.cov_dim(self.get_cov(i))
 
     @staticmethod
     def cov_dim(cov):
@@ -88,12 +103,21 @@ class DataSampler:
     def inverse_cov(cov, n):
         return np.linalg.inv(oracle_shrinkage(cov, n))
 
+    @staticmethod
+    def get_indices(x, dedup=True, dedup_use_n_columns=5):
+        if dedup:
+            return np.arange(x.shape[0])
+        else:
+            dedup_use_n_columns = min(x.shape[1], dedup_use_n_columns)
+            _, idx = np.unique(list(map(str, x[:, :dedup_use_n_columns])), return_index=True)
+            return idx
+
     @property
     def distance_metric(self):
-        return {'minkowski': DataSampler.minkowski,
-                'cosine': DataSampler.cosine,
-                'global_mahalanobis': DataSampler.global_mahalanobis,
-                'local_mahalanobis': DataSampler.local_mahalanobis}[self.method]
+        return {"minkowski": DataSampler.minkowski,
+                "cosine": DataSampler.cosine,
+                "global_mahalanobis": DataSampler.global_mahalanobis,
+                "local_mahalanobis": DataSampler.local_mahalanobis}[self.method]
 
     @staticmethod
     def minkowski(x, y, norm, **kwargs):
@@ -162,32 +186,31 @@ class DataSampler:
         return np.sqrt(np.sum((x - y) * np.matmul(x - y, local_cov_inv), axis=1))
 
     @staticmethod
-    def random_sample(x, n, dedup=True, dedupe_first_n_rows=5):
+    def random_sample(x, n, dedup=True, dedup_use_n_columns=5):
         """
         Generate a random sample of the dataset.
         Args:
             x: Original dataset
             n: Size of the sample
             dedup: Whether to deput dataset
-            dedupe_first_n_rows: Number of rows to use for deduping
+            dedup_use_n_columns: Number of rows to use for deduping
 
         Returns:
             Sampled dataset.
         """
         # retrive index of unique values
+        idxs = DataSampler.get_indices(x, dedup, dedup_use_n_columns)
         if dedup:
-            _, idxs = np.unique(list(map(str, x[:,:dedupe_first_n_rows])), return_index=True)
             x = x[idxs]
             np.random.shuffle(idxs)
             idxs = idxs[:n]
             return x[idxs], idxs
         else:
-            idxs = np.arange(x.shape[0])
             np.random.shuffle(idxs)
             idxs = idxs[:n]
             return x[idxs], idxs
 
-    def minmax_sample(self, x, n, dedup=True, dedupe_first_n_rows=5):
+    def minmax_sample(self, x, n, dedup=True, dedup_use_n_columns=5):
         """
         Generate a random sample of the dataset using a minmax strategy.
 
@@ -195,18 +218,14 @@ class DataSampler:
             x: Original dataset
             n: Size of the sample
             dedup: Whether to deput dataset
-            dedupe_first_n_rows: Number of rows to use for deduping
+            dedupe_use_n_columns: Number of rows to use for deduping
 
         Returns:
             Sampled dataset, index wrt origin dataset.
         """
         d = x.shape[1]
         # retrive index of unique values
-        if dedup:
-            dedupe_first_n_rows = min(d, dedupe_first_n_rows)
-            _, idxs = np.unique(list(map(str, x[:,:dedupe_first_n_rows])), return_index=True)
-        else:
-            idxs = np.arange(d)
+        idxs = DataSampler.get_indices(x, dedup, dedup_use_n_columns)
 
         n = int(x.shape[0] ** 0.5) if n is None else n
         y = np.empty((n, d))
@@ -226,7 +245,7 @@ class DataSampler:
         for i in range(1, n):
 
             if (i + 1) % steps == 0:
-                logging.info("Done {} steps of {}".format(i + 1, n))
+                print("Done {} steps of {}".format(i + 1, n))
 
             dx = self.distance_metric(x=x, y=y[i-1,:], norm=self.norm, cov_inv=cov_inv)
             dmin[dmin > dx] = dx[dmin > dx]
@@ -235,4 +254,3 @@ class DataSampler:
             igrid.append(idxs[iy])
 
         return y, np.array(igrid, dtype=int)
-

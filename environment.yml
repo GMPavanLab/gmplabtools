@@ -2,10 +2,9 @@ name: gmplabtools
 channels:
   - conda-forge
 dependencies:
-  - skopt
   - ase=3.19.0
   - cycler=0.10.0
-  - dscribe=0.3.4  # 0.3.5 available for linux
+  - dscribe=0.4.0  # 0.3.5 available for linux
   - ipykernel
   - ipython
   - ipywidgets
@@ -32,3 +31,4 @@ dependencies:
   - wheel
   - pip:
     - fst-pso==1.7.10
+    - scikit-optimize
