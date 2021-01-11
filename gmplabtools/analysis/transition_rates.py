@@ -27,7 +27,7 @@ class ClusterRates:
 
     def calculate_matrix(self, x):
         """
-        Calculates the trasition matrix using cluster labels
+        Calculates the transition matrix using cluster labels
 
         Args:
             x: Array of cluster labels for each molecule and timeframe.

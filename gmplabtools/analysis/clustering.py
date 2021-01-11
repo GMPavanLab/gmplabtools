@@ -11,8 +11,8 @@ def calculate_adjacency(prob, clusters, bootstrap):
     Args:
         prob: Cluster probabilities for each gridpoint.
         clusters: Cluster label for each gridpoints.
-        def calculate_adjacency(prob, clusters, bootstrap):
-: Bootstrap clustering data.
+        bootstrap: Bootstrap clustering data.
+
     Returns:
         Array of distances from y, clusters to gridpoints mapping
     """
@@ -73,7 +73,7 @@ def merge(adjacency, cluster_mapping, threshold):
     Args:
         adjacency: Adjacency matrix.
         cluster_mapping: Cluster to gridpoint mapping.
-        threshold: Distance thresold.
+        threshold: Distance threshold.
 
     Returns:
         Array of distances from y, cluster mapping.
