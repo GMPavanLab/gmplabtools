@@ -106,11 +106,17 @@ class Pamm:
         Run gmplabtools/pamm/bin/pamm using the paramters in the input_dict and read the results
         """
         command = self.command_parser
-        print("Executing command: {}".format(" ".join(command)))
+        print(f"Executing command: {command}")
         proc = os.system(command)
         self.run_status = proc
         self.read_output()
         return self
+
+    def predict(self, x):
+        return self.gmm.predict(x)
+
+    def predict_proba(self, x):
+        return self.gmm.predict_proba(x)
 
     @property
     def _bootstrap_file(self):
@@ -185,6 +191,9 @@ class PammGMM:
         """
         prob = np.apply_along_axis(self._predict_proba, 1, x)
         return prob / np.sum(prob, axis=1).reshape((-1, 1))
+
+    def predict(self, x):
+        return np.argmax(self.predict_proba(x), axis=1)
 
     @classmethod
     def read_clusters(cls, filename, grid_file=None, bootstrap_file=None):
