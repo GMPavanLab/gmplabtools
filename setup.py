@@ -1,7 +1,9 @@
 import os
 import sys
 import subprocess
-from setuptools import setup, Command
+from setuptools import setup, Command, find_packages
+
+import gmplabtools
 
 
 class CleanCommand(Command):
@@ -17,13 +19,20 @@ class CleanCommand(Command):
 
     def run(self):
         os.system("rm -vrf ./cache./cache ./**/.cache "
-                  "./.eggs ./**/.egg "
-                  "./*.egg-info ./**/*.egg-info "
+                  "build "
+                  "dist "
+                  "./.eggs "
+                  "./**/.egg "
+                  "./*.egg-info "
+                  "./**/*.egg-info "
                   "./gmplabtools/pamm/src/*.o "
                   "./gmplabtools/pamm/src/*.mod "
-                  "./**/*pyc ./**/__pycache__ "
-                  "./**.coverage ./**/cover*"
-                  "./.pytest_cache ./mypy_cache "
+                  "**/*pyc "
+                  "**/__pycache__ "
+                  "**.coverage "
+                  "**/cover* "
+                  ".pytest_cache "
+                  "./mypy_cache "
                   )
 
 
@@ -84,7 +93,10 @@ class CompileCommand(Command):
 
 setup(
     name="gmplabtools",
-    version="0.0.0",
+    version=gmplabtools.__version__,
+    packages=find_packages(),
+    package_data={'': ['pamm/bin/*']},
+    include_package_data=True,
     # add dependent module if needed
     install_requires=[],
     # add/change tests requirements if needed
@@ -93,7 +105,7 @@ setup(
     ],
     cmdclass={
         'typecheck': TypecheckCommand,
-        'clean': CleanCommand,
+        'cleanall': CleanCommand,
         'compile': CompileCommand
     }
 )
