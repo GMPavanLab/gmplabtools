@@ -30,7 +30,6 @@ class InputDictFixture:
             new_args = list(args)
             new_kwargs = kwargs.copy()
 
-
             # update args
             func_args = list(inspect.signature(func).parameters.keys())
             arg_position = InputDictFixture.get_arg_position(

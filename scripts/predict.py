@@ -1,15 +1,14 @@
 import argparse
-import json
 
 import numpy as np
 
 from gmplabtools.shared.config import get_config
-from gmplabtools.pamm.lib.transition_rates import ClusterRates
-from gmplabtools.pamm.lib.tools import GMMPredict
+from gmplabtools.analysis import ClusterRates
+from gmplabtools.pamm import PammGMM
 
-    
+
 def main(config):
-    gmm = GMMPredict.read_clusters(config.pamm_output + ".pamm")
+    gmm = PammGMM.read_clusters(config.pamm_output + ".pamm")
 
     print("There are {} clusters".format(np.unique(gmm.pk).shape[0]))
 

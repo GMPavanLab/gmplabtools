@@ -27,7 +27,7 @@ class ClusterRates:
 
     def calculate_matrix(self, x):
         """
-        Calculates the trasition matrix using cluster labels
+        Calculates the transition matrix using cluster labels
 
         Args:
             x: Array of cluster labels for each molecule and timeframe.
@@ -59,7 +59,7 @@ class ClusterRates:
     @staticmethod
     def matrix_update_cluster(v, w, clusters, n):
         """
-        Calculates transition matrix updates for two consecity frames
+        Calculates transition matrix updates for two consecutive frames
 
         Args:
             v: Frame of trajectory.

@@ -78,6 +78,7 @@ def main(config):
     np.random.shuffle(all_pca)
     plot(all_pca[:15000, :], "PhaseSpace2D_all.png")
 
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()

@@ -1,1 +1,2 @@
-from gmplabtools.pamm.pamm_commander import PammCommander
+from gmplabtools.pamm import Pamm
+from ._version import __version__

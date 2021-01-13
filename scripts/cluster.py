@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
 from gmplabtools.shared.config import get_config
-from gmplabtools.pamm.lib.dimensionality import DataSampler
-from gmplabtools.pamm.pamm_commander import PammCommander
-from gmplabtools.pamm.lib.clustering_tools import calculate_adjacency, adjancency_dendrogram
+from gmplabtools.analysis import DataSampler, calculate_adjacency, adjancency_dendrogram
+from gmplabtools.pamm.pamm import Pamm
 
 
 def main(config):
@@ -19,7 +18,7 @@ def main(config):
         grid, indices = d.minmax_sample(x, config.size)
         np.savetxt("{}.grid".format(config.savegrid), indices + 1, fmt="%d")
 
-    p = PammCommander(config.pamm_input)
+    p = Pamm(config.pamm_input)
     print(p.command_parser)
     p.run()
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-from gmplabtools.pamm.lib.transition_rates import ClusterRates
+from gmplabtools.analysis.transition_rates import ClusterRates
 
 
 class TestClusterRates:
