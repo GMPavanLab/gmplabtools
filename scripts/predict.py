@@ -30,4 +30,4 @@ if __name__ == "__main__":
                         help="config file")
     args = parser.parse_args()
 
-    main(get_config(args.config, "predict"))
+    main(get_config(args.config))

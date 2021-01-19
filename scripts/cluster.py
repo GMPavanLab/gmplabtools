@@ -11,18 +11,17 @@ from gmplabtools.pamm import Pamm
 
 def main(config):
 
-    x = np.loadtxt(config.trj_filename)
+    x = np.loadtxt("all_system_transformed")
 
-    if config.generate_grid:
+    if config.cluster["generate_grid"]:
         d = DataSampler(config.distance, norm=config.p)
         grid, indices = d.minmax_sample(x, config.size)
         np.savetxt("{}.grid".format(config.savegrid), indices + 1, fmt="%d")
 
-    p = Pamm(config.pamm_input)
-    print(p.command_parser)
+    p = Pamm(config.cluster["pamm_input"])
     p.run()
 
-    if 'bootstrap' in config.pamm_input:
+    if "bootstrap" in config.cluster["pamm_input"]:
         adjacency, mapping = calculate_adjacency(
             prob=p.p,
             clusters=p.cluster,
@@ -31,8 +30,8 @@ def main(config):
 
         z = adjancency_dendrogram(adjacency)
         fig, ax = plt.subplots()
-        _ = dendrogram(z, ax=ax, **config.dendrogram)['leaves']
-        fig.savefig('clusters_dendrogram.png')
+        _ = dendrogram(z, ax=ax, **config.cluster["dendrogram"])["leaves"]
+        fig.savefig("clusters_dendrogram.png")
 
 
 if __name__ == "__main__":
@@ -42,6 +41,4 @@ if __name__ == "__main__":
                         help="config file")
     args = parser.parse_args()
 
-    config = get_config(args.config)
-
-    main(config.v)
+    main(get_config(args.config))

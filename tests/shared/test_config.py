@@ -67,3 +67,10 @@ def test_import_external_fail(config):
     # then:
     with pytest.raises(ModuleNotFoundError):
         _ = import_external(config, class_name)
+
+
+def test_config_recursive(config):
+    assert config.transform
+    assert isinstance(config.pymodule, str)
+    assert isinstance(config.transform["soap_param"], dict)
+

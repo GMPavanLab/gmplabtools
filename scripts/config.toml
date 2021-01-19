@@ -16,11 +16,11 @@ rcut = 8
 nmax = 8
 lmax = 8
 
-[transform.projection]
+[transform.transformer]
 name = "PCA"
 
-[transform.projection.param]
-components=7
+[transform.transformer.param]
+n_components=7
 
 [cluster]
 trj_filename = "allsoap.pca"
