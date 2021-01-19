@@ -4,9 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
-from gmplabtools.shared.config import get_config
+from gmplabtools.shared import get_config
 from gmplabtools.analysis import DataSampler, calculate_adjacency, adjancency_dendrogram
-from gmplabtools.pamm.pamm import Pamm
+from gmplabtools.pamm import Pamm
 
 
 def main(config):

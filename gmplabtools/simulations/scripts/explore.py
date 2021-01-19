@@ -1,7 +1,7 @@
 import argparse
 
 from gmplabtools.shared.config import get_config
-from gmplabtools.martini.simulation import SetupSim
+from gmplabtools.simulations.simulation import SetupSim
 
 
 def main(config):

@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from jinja2 import Environment, PackageLoader
 
-from gmplabtools.martini.data.non_bonded import ORIGINAL
+from gmplabtools.simulations.data.non_bonded import ORIGINAL
 
 
 def cache():
@@ -60,13 +60,13 @@ class Param:
 
     @classmethod
     def get_data(cls, filename):
-        param = pkgutil.get_data('gmplabtools.martini.data', filename)
+        param = pkgutil.get_data('gmplabtools.simulations.data', filename)
         return pd.read_csv(io.BytesIO(param))
 
     @property
     @cache()
     def df(self):
-        df = Param.get_data('martini-non-bonded.csv')
+        df = Param.get_data('simulations-non-bonded.csv')
         df['type'] = df['type'].map(Param.non_bonded_strength)
         return df
 

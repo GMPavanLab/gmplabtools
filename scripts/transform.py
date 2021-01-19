@@ -47,23 +47,22 @@ def main(config):
     msg = ", ".join(
         ["{}: {}".format(name, k.shape[0]) for name, k in soap.items()]
     )
-    print(all_soap.shape)
     print(msg)
 
-    tranformer = make_pipeline(PCA(n_components=config.components))
+    transformer = make_pipeline(PCA(n_components=config.components))
 
-    tranformer = tranformer.fit(all_soap)
+    transformer = transformer.fit(all_soap)
 
     # calculate variance ratios on the merged data
-    variance = tranformer.named_steps['pca'].explained_variance_ratio_
-    var=np.cumsum(np.round(variance, decimals=3)*100)
+    variance = transformer.named_steps['pca'].explained_variance_ratio_
+    var = np.cumsum(np.round(variance, decimals=3) * 100)
     print("PCA (dim={}) variance: {}".format(
-        str(tranformer.named_steps['pca'].n_components_),
+        str(transformer.named_steps['pca'].n_components_),
         var)
     )
 
-    transformed = {name: tranformer.transform(k) for name, k in soap.items()}
-    all_pca = tranformer.transform(all_soap)
+    transformed = {name: transformer.transform(k) for name, k in soap.items()}
+    all_pca = transformer.transform(all_soap)
 
     np.savetxt("allsoap.pca", all_pca)
 
