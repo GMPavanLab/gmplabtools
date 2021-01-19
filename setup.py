@@ -4,6 +4,8 @@ import subprocess
 from setuptools import setup, Command, find_packages
 
 import pkg_resources
+
+
 version = pkg_resources.require("gmplabtools")[0].version
 
 

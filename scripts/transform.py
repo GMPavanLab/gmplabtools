@@ -3,8 +3,6 @@ import argparse
 import numpy as np
 from ase.io import read
 from dscribe.descriptors import SOAP
-from sklearn.pipeline import make_pipeline
-from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
 from gmplabtools.shared.config import get_config
@@ -29,12 +27,11 @@ def plot(pca, fname):
 
 
 def main(config):
+
+    n_traj = len(config.trajectories)
     traj = {name: read_traj(traj) for name, traj in config.trajectories.items()}
 
-    if hasattr(config, "full_traj"):
-        all_traj = read_traj(config.full_traj)
-    else:
-        all_traj = sum(traj.values(), [])
+    all_traj = sum(traj.values(), [])
 
     # info on how it works (and installation):
     # https://singroup.github.io/dscribe/tutorials/soap.html
@@ -49,33 +46,38 @@ def main(config):
     )
     print(msg)
 
-    transformer = make_pipeline(PCA(n_components=config.components))
+    transformer = config.transform["projection"]
+    params = config.transform["projection"]["params"]
+    transformer = transformer(**params)
 
     transformer = transformer.fit(all_soap)
 
     # calculate variance ratios on the merged data
-    variance = transformer.named_steps['pca'].explained_variance_ratio_
-    var = np.cumsum(np.round(variance, decimals=3) * 100)
-    print("PCA (dim={}) variance: {}".format(
-        str(transformer.named_steps['pca'].n_components_),
-        var)
-    )
+    if "PCA" in str(transformer):
+        variance = transformer.named_steps['pca'].explained_variance_ratio_
+        var = np.cumsum(np.round(variance, decimals=3) * 100)
+        print("PCA (dim={}) variance: {}".format(
+            str(transformer.named_steps['pca'].n_components_),
+            var)
+        )
 
     transformed = {name: transformer.transform(k) for name, k in soap.items()}
     all_pca = transformer.transform(all_soap)
 
-    np.savetxt("allsoap.pca", all_pca)
+    np.savetxt("combined_systems_processed.txt", all_pca)
 
     for k, x in transformed.items():
-        np.savetxt("{}soap.pca".format(k), x)
-        
+        np.savetxt("{}_soap.txt".format(k), x)
+
+    sample_length = min(2000, x.shape[0])
+
     if config.plot:
         for k, x in transformed.items():
             np.random.shuffle(x)
-            plot(x[:5000, :], "PhaseSpace2D_{}.png".format(k))
+            plot(x[:sample_length, :], "PhaseSpace2D_{}.png".format(k))
 
     np.random.shuffle(all_pca)
-    plot(all_pca[:15000, :], "PhaseSpace2D_all.png")
+    plot(all_pca[:sample_length * n_traj, :], "PhaseSpace2D_all.png")
 
 
 if __name__ == "__main__":
@@ -85,4 +87,4 @@ if __name__ == "__main__":
                         help="config file")
     args = parser.parse_args()
 
-    main(get_config(args.config, "transform"))
+    main(get_config(args.config))

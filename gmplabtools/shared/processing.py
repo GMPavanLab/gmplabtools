@@ -1,7 +1,7 @@
 from sklearn.base import TransformerMixin
+import sklearn.decomposition as dim_red
 
-
-__all__ = ["NullTransformer"]
+__all__ = ["NullTransformer"] + [cls for cls in dir(dim_red) if hasattr(cls, "transform")]
 
 
 class NullTransformer(TransformerMixin):

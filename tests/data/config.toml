@@ -1,5 +1,5 @@
-mymodule=[]
-pymodules=[]
+mymodule=""
+pymodule="numpy"
 
 [transform]
 plot = true

@@ -42,4 +42,6 @@ if __name__ == "__main__":
                         help="config file")
     args = parser.parse_args()
 
-    main(get_config(args.config, "cluster"))
+    config = get_config(args.config)
+
+    main(config.v)
