@@ -8,7 +8,7 @@ from gmplabtools.pamm import PammGMM
 
 
 def main(config):
-    gmm = PammGMM.read_clusters(config.pamm_output + ".pamm")
+    gmm = PammGMM.read_clusters(config.cluster["o"] + ".pamm")
 
     print("There are {} clusters".format(np.unique(gmm.pk).shape[0]))
 

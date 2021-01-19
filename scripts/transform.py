@@ -74,8 +74,8 @@ def main(config):
             np.random.shuffle(x)
             plot(x[:sample_length, :], "scatter_plot_{}.png".format(k))
 
-    np.random.shuffle(all_pca)
-    plot(all_pca[:sample_length * n_traj, :], "scatter_plot_all.png")
+    np.random.shuffle(red_dim)
+    plot(red_dim[:sample_length * n_traj, :], "scatter_plot_all.png")
 
 
 if __name__ == "__main__":

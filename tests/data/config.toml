@@ -48,9 +48,6 @@ C1 = "C1soap.pca"
 C5 = "C5soap.pca"
 N0 = "N0soap.pca"
 
-[predict]
-pamm_output = "pamm"
-
 [predict.size]
 C1 = 40
 C5 = 40
