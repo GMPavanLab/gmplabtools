@@ -22,7 +22,7 @@ jobs:
         if [ -f environment.txt ]; then pip install -r environment.txt; fi
     - name: Install package
       run: |
-        python setup.py install
+        python setup.py compile && python setup.py install
     - name: Test with pytest
       run: |
         pytest tests/
