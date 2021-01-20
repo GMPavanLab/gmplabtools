@@ -1,1 +1,1 @@
-from .pamm import *
+from .pamm import Gauss, PammGMM, Pamm

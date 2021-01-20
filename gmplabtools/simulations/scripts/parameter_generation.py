@@ -5,7 +5,7 @@ from skopt import Optimizer
 from skopt.space import Real
 
 from gmplabtools.shared.config import get_config
-from gmplabtools.martini.parameters import Param
+from gmplabtools.simulations.parameters import Param
 
 
 def main(config, n, res):

@@ -1,5 +1,5 @@
-mymodule=[]
-pymodules=[]
+mymodule=""
+pymodule="numpy"
 
 [transform]
 plot = true
@@ -16,11 +16,11 @@ rcut = 8
 nmax = 8
 lmax = 8
 
-[transform.transformer]
+[transform.projection]
 name = "PCA"
 
-[transform.transformer.param]
-n_components=7
+[transform.projection.param]
+components=7
 
 [cluster]
 trj_filename = "allsoap.pca"
@@ -47,9 +47,6 @@ bootstrap = 128
 C1 = "C1soap.pca"
 C5 = "C5soap.pca"
 N0 = "N0soap.pca"
-
-[predict]
-pamm_output = "pamm"
 
 [predict.size]
 C1 = 40

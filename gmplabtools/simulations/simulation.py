@@ -40,7 +40,7 @@ class SetupSim:
 
     def _init_template(self, config):
         template = Martini(**config).get_template(self.config.params['template'])
-        template_file = os.path.join(self.full_path, 'martini.itp')
+        template_file = os.path.join(self.full_path, 'simulations.itp')
         return template_file, template
 
     def _generate_simulation(self, params):

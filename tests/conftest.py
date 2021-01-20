@@ -1,6 +1,14 @@
+import functools, os, inspect
+
 import pytest
-import inspect
-import functools
+
+import gmplabtools
+
+
+ROOT_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(gmplabtools.__file__)),
+    os.path.pardir
+)
 
 
 @pytest.fixture
@@ -62,3 +70,12 @@ class InputDictFixture:
             if a == arg:
                 return i
         return None
+
+
+@pytest.fixture
+def config():
+    config_file = f"{ROOT_DIR}/tests/data/config.toml"
+    config = gmplabtools.shared.config.get_config(config_file)
+    mymodule = f"{ROOT_DIR}/tests/data/mymodule.py"
+    config.mymodule = mymodule
+    return config

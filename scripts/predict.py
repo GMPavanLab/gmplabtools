@@ -8,11 +8,11 @@ from gmplabtools.pamm import PammGMM
 
 
 def main(config):
-    gmm = PammGMM.read_clusters(config.pamm_output + ".pamm")
+    gmm = PammGMM.read_clusters(config.cluster["o"] + ".pamm")
 
     print("There are {} clusters".format(np.unique(gmm.pk).shape[0]))
 
-    for k,f in config.extrapolate_on_files.items():
+    for k, f in config.extrapolate_on_files.items():
         x = np.loadtxt(f)
         x_ = gmm.predict_proba(x)
         clusters = np.argmax(x_, axis=1).reshape((-1, 1))
@@ -30,4 +30,4 @@ if __name__ == "__main__":
                         help="config file")
     args = parser.parse_args()
 
-    main(get_config(args.config, "predict"))
+    main(get_config(args.config))

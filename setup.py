@@ -3,7 +3,10 @@ import sys
 import subprocess
 from setuptools import setup, Command, find_packages
 
-import gmplabtools
+import pkg_resources
+
+
+version = pkg_resources.require("gmplabtools")[0].version
 
 
 class CleanCommand(Command):
@@ -93,7 +96,7 @@ class CompileCommand(Command):
 
 setup(
     name="gmplabtools",
-    version=gmplabtools.__version__,
+    version=version,
     packages=find_packages(),
     package_data={'': ['pamm/bin/*']},
     include_package_data=True,
@@ -107,5 +110,12 @@ setup(
         'typecheck': TypecheckCommand,
         'cleanall': CleanCommand,
         'compile': CompileCommand
+    },
+    entry_points={
+        'console_scripts': [
+            'gmp_transform=scripts.transform:main',
+            'gmp_cluster=scripts.cluster:main',
+            'gmp_predict=scripts.predict:main'
+        ]
     }
 )
