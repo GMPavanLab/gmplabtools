@@ -5,8 +5,11 @@ from setuptools import setup, Command, find_packages
 
 import pkg_resources
 
+try:
+    version = pkg_resources.require("gmplabtools")[0].version
+except pkg_resources.DistributionNotFound:
+    version = None
 
-version = pkg_resources.require("gmplabtools")[0].version
 
 
 class CleanCommand(Command):
