@@ -51,7 +51,7 @@ Running image is pretty straight forward. Following command opens containers ter
 docker run --rm -it -v $PWD:/home/gmplabtools gmplabtools
 ```
 
-We can also build a pamm by running
+We can also build pamm by running
 
 ```
 docker run --rm -v $PWD:/home/gmplabtools gmplabtools python setup.py compile

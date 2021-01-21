@@ -72,10 +72,11 @@ class InputDictFixture:
         return None
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def config():
     config_file = f"{ROOT_DIR}/tests/data/config.toml"
     config = gmplabtools.shared.config.get_config(config_file)
     mymodule = f"{ROOT_DIR}/tests/data/mymodule.py"
     config.mymodule = mymodule
-    return config
+    yield config
+    os.remove("mymodule.py")
