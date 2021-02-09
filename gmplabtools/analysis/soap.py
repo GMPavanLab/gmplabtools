@@ -6,6 +6,9 @@ from sklearn.cluster import AffinityPropagation, AgglomerativeClustering
 
 
 class BaseSoapClustering:
+    """Base to use perform clustering on SOAP descriptors using estimator based on a distance
+     matrix.
+     """
 
     def __init__(self, n_neighbors=1):
         self._knn = NearestNeighbors(
@@ -51,7 +54,8 @@ class BaseSoapClustering:
 
 
 class AggClustering(BaseSoapClustering):
-
+    """Class which implements clustering on SOAP descriptors using AgglomerativeClustering.
+     """
     def fit(self, x, distance_threshold, linkage="average", n_clusters=None, **kwargs):
         self._fit(x)
         self.model = AgglomerativeClustering(
@@ -65,7 +69,8 @@ class AggClustering(BaseSoapClustering):
 
 
 class AffClustering(BaseSoapClustering):
-
+    """Class which implements clustering on SOAP descriptors using AffinityPropagation.
+     """
     def fit(self, x, **kwargs):
         self._fit(x)
         self.model = AffinityPropagation(
