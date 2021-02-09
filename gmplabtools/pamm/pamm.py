@@ -62,9 +62,12 @@ class Pamm:
 
     Optional fields:
         bootstrap: number of boostrap iterations; this is required for the calculations of the adjacency matrix.
-        merger: merge clusters having occupancy lower than the given probaility threshold.
+        merger: merge clusters having occupancy lower than the given probability threshold.
         qs: Scaling factor for Quick-Shift algorithm.
         nms: number of steps for mean-shift.
+        z: probabilities below this threshold are counted as 'no cluster'.
+
+    See in gmplabtools/pamm/src/pamm.f90 from lines 1094 to 1153 for further details.
     """
     BIN_PATH = os.path.dirname(__file__) + "/bin/pamm"
 
