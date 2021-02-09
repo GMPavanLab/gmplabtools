@@ -45,6 +45,29 @@ class Gauss:
 class Pamm:
     """
     Class that allows to interact with pamm and parse the results into python.
+
+    The __init__ methods require you to pass a dictionary with the parameters required by the PAMM
+    algorithm. The dictionary must contain the required keys listed in `INPUT_FIELDS`.
+
+    Original implementation: https://github.com/cosmo-epfl/pamm
+    Paper: https://pubs.acs.org/doi/10.1021/acs.jctc.7b00993
+
+    Required fields:
+        trajectory: filename of the input dataset read by PAMM (txt file format).
+        d: n of dimensions of the input dataset.
+        ngrid: number of gridpoints for gaussian kde.
+        gridfile: filename storing gridpoint files (txt file); if not provide PAMM would select ngrid gridpoints.
+        o: basename for output files generation.
+        fpoints or fspread: parameters to tune the weighting of the local covariance
+
+    Optional fields:
+        bootstrap: number of boostrap iterations; this is required for the calculations of the adjacency matrix.
+        merger: merge clusters having occupancy lower than the given probability threshold.
+        qs: Scaling factor for Quick-Shift algorithm.
+        nms: number of steps for mean-shift.
+        z: probabilities below this threshold are counted as 'no cluster'.
+
+    See in gmplabtools/pamm/src/pamm.f90 from lines 1094 to 1153 for further details.
     """
     BIN_PATH = os.path.dirname(__file__) + "/bin/pamm"
 
@@ -187,12 +210,15 @@ class PammGMM:
 
     def predict_proba(self, x):
         """
-        Predict cluster probabilities for a dataset.
+        Predict cluster assignment probabilities.
         """
         prob = np.apply_along_axis(self._predict_proba, 1, x)
         return prob / np.sum(prob, axis=1).reshape((-1, 1))
 
     def predict(self, x):
+        """
+        Predict cluster assignment probabilities.
+        """
         return np.argmax(self.predict_proba(x), axis=1)
 
     @classmethod

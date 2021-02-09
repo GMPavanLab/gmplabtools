@@ -96,6 +96,10 @@ def adjancency_dendrogram(adjacency, link="ward"):
     """
     This function returns a square-form distance matrix used for building a
     dendrogram based on the clusters' adjacency matrix
+
+    Args:
+        adjacency: the adjacency matrix as returned from `calculate_adjacency`
+        link: string corresponding to aggregation method of scipy.cluster.hierarchy.linkage
     """
     dist = np.zeros(adjacency.shape)
     for i in range(adjacency.shape[0]):

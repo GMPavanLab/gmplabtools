@@ -5,12 +5,17 @@ class ClusterRates:
     """
     Class that return clustering transition rate matrix
     """
-
     def __init__(self, n, method="label"):
+        """
+        Args:
+            n: number of components of each individual frames.
+            method: whether to calculate transition rate using cluster labels or cluster assignment
+                probabilities.
+        """
         self.n = n
+        self.method = method
         self.clusters = None
         self.n_cluster = None
-        self.method = method
 
     def _select_method(self):
         return {
