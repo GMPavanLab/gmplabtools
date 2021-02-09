@@ -42,6 +42,8 @@ def run_test():
 
     assert pamm.n == 3
 
+    print("Test passed.")
+
 
 if __name__ == "__main__":
 

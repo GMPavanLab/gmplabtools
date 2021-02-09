@@ -1,8 +1,19 @@
-import os
+import os, subprocess
 
 import numpy as np
 
 from gmplabtools.analysis.tools import oracle_shrinkage
+
+
+def exec_command(cmd):
+    """Execute command and return only exit code"""
+    with subprocess.Popen([cmd], shell=True, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE) as gmx_process:
+        _ = gmx_process.communicate()[1].decode()
+        gmx_process.kill()
+    if gmx_process.returncode != 0:
+        raise RuntimeError(f"Non-zero exit code for dommand {cmd}")
+    return gmx_process.returncode
 
 
 class Gauss:
@@ -107,7 +118,7 @@ class Pamm:
         """
         command = self.command_parser
         print(f"Executing command: {command}")
-        proc = os.system(command)
+        proc = exec_command(command)
         self.run_status = proc
         self.read_output()
         return self
