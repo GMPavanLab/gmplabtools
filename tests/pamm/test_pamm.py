@@ -75,7 +75,7 @@ class TestPamm:
         with pytest.raises(ValueError, match="Must provide only"):
             pamm.format()
 
-    @InputDictFixture(gridfile="some_gridfile")
+    @InputDictFixture(readgrid="some_gridfile")
     def test_grid_file_not_found(self, input_dict):
         # when:
         pamm = Pamm(input_dict)

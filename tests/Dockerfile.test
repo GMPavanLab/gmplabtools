@@ -1,0 +1,7 @@
+FROM softmaxltd/gmplabtools-base:latest
+
+ADD . .
+
+RUN python3 setup.py install
+
+CMD ["pytest", "tests"]
