@@ -9,7 +9,6 @@ class BaseSoapClustering:
     """Base to use perform clustering on SOAP descriptors using estimator based on a distance
      matrix.
      """
-
     def __init__(self, n_neighbors=1):
         self._knn = NearestNeighbors(
             n_neighbors=n_neighbors,
@@ -20,12 +19,18 @@ class BaseSoapClustering:
 
     @staticmethod
     def soap_kernel(x, y):
+        """
+        Calculate similarity kernel between two SOAP vectors.
+        """
         u = np.dot(x, x)
         v = np.dot(y, y)
         return np.dot(x, y) / (u * v) ** 0.5
 
     @staticmethod
     def soap_distance(x, y):
+        """
+        Calculate distance between two SOAP vectors.
+        """
         kernel = BaseSoapClustering.soap_kernel(x, y)
         d = (2 - 2 * kernel) ** 0.5
         return d if not np.isnan(d) else 0
