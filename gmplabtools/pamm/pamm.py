@@ -1,8 +1,19 @@
-import os
+import os, subprocess
 
 import numpy as np
 
 from gmplabtools.analysis.tools import oracle_shrinkage
+
+
+def exec_command(cmd):
+    """Execute command and return only exit code"""
+    with subprocess.Popen([cmd], shell=True, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE) as gmx_process:
+        _ = gmx_process.communicate()[1].decode()
+        gmx_process.kill()
+    if gmx_process.returncode != 0:
+        raise RuntimeError(f"Non-zero exit code for dommand {cmd}")
+    return gmx_process.returncode
 
 
 class Gauss:
@@ -73,7 +84,7 @@ class Pamm:
 
     INPUT_FIELDS = (
         "d", "bootstrap", "fpoints", "fspread", "qs",
-        "o", "gridfile", "trajectory", "nms", "ngrid", "z",
+        "o", "readgrid", "trajectory", "nms", "ngrid", "z",
         "merger"
     )
 
@@ -108,9 +119,9 @@ class Pamm:
         if not ((pamm_command["fspread"] is None) ^ (pamm_command["fpoints"] is None)):
             raise ValueError("Must provide only one between `fspread` and `fpoints`.")
 
-        if pamm_command["gridfile"] is not None:
-            if not os.path.isfile(pamm_command["gridfile"]):
-                raise ValueError("Grid file `{}` was not found.".format(pamm_command["gridfile"]))
+        if pamm_command["readgrid"] is not None:
+            if not os.path.isfile(pamm_command["readgrid"]):
+                raise ValueError("Grid file `{}` was not found.".format(pamm_command["readgrid"]))
 
         if not os.path.isfile(pamm_command["trajectory"]):
             raise ValueError("Trajectory `{}` was not found.".format(pamm_command["trajectory"]))
@@ -130,7 +141,7 @@ class Pamm:
         """
         command = self.command_parser
         print(f"Executing command: {command}")
-        proc = os.system(command)
+        proc = exec_command(command)
         self.run_status = proc
         self.read_output()
         return self
@@ -140,6 +151,14 @@ class Pamm:
 
     def predict_proba(self, x):
         return self.gmm.predict_proba(x)
+
+    def __getattr__(self, item):
+        if self.gmm is not None and hasattr(self.gmm, item):
+                return getattr(self.gmm, item)
+
+    @property
+    def n(self):
+        return len(self.pk)
 
     @property
     def _bootstrap_file(self):
