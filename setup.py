@@ -84,7 +84,7 @@ class CompileCommand(Command):
 
     def run(self):
         # clean folder
-        _ = subprocess.run("cd ./gmplabtools/pamm/src && make clean", shell=True)
+        _ = subprocess.run("cd ./gmplabtools/pamm/src && make cleanall", shell=True)
 
         cmd_to_run = "cd ./gmplabtools/pamm/src && make"
         completed_process = subprocess.run(cmd_to_run, universal_newlines=True, shell=True)
