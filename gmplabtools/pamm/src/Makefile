@@ -26,17 +26,24 @@ MODULES=libpamm.f90 xyz.f90 random.f90
 OBJECTS=$(MODULES:.f90=.o)
 TOOLS=pamm
 
-.PHONY: all clean $(TOOLS)
+.PHONY: all clean cleanall $(TOOLS)
 all: $(TOOLS)
 
 $(TOOLS:%=%.o): $(OBJECTS)
 
 $(TOOLS): % : ../bin/%
+
 $(TOOLS:%=../bin/%): ../bin/%: %.o $(OBJECTS)
-	$(FF) $(FFLAGS) -o $@ $^ $(LDFLAGS)
+	@echo compiling executable $@
+	@mkdir -p ../bin
+	@$(FF) $(FFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.f90
-	$(FF) $(FFLAGS) -c $<
+	@echo compiling object from $<
+	@$(FF) $(FFLAGS) -c $<
 
 clean:
-	rm *.o *.mod
+	@rm -vf *.o *.mod
+
+cleanall: clean
+	@rm -vf ../bin/pamm
