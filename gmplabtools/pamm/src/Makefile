@@ -20,7 +20,8 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 FF=gfortran
-FFLAGS=-O3 -g -Wall -Wno-maybe-uninitialized -cpp
+DEVELOPFLAGS= -g -Wall -Wno-maybe-uninitialized
+FFLAGS=-O3 -cpp #$(DEVELOPFLAGS)
 LDFLAGS=-llapack -lblas
 MODULES=libpamm.f90 xyz.f90 random.f90
 OBJECTS=$(MODULES:.f90=.o)
@@ -39,7 +40,7 @@ $(TOOLS:%=../bin/%): ../bin/%: %.o $(OBJECTS)
 	@$(FF) $(FFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.f90
-	@echo compiling object from $<
+	@echo compiling object $@
 	@$(FF) $(FFLAGS) -c $<
 
 clean:
