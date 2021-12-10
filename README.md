@@ -37,6 +37,23 @@ or for development purposes via
 python setup.py develop
 ```
 
+#### In case of errors
+
+If `python setup.py compile` fails (for example if blas and lapack are not installed on your system) you can copy the precompiled static executable `pamm_ubuntu` or `pamm_mac` into the pamm bin directory.
+
+```
+mkdir -p ./gmplabtools/pamm/precompiledPamm/bin
+cp ./gmplabtools/pamm/precompiledPamm/pamm_ubuntu ./gmplabtools/pamm/precompiledPamm/bin/pamm
+```
+or
+```
+mkdir -p ./gmplabtools/pamm/precompiledPamm/bin
+cp ./gmplabtools/pamm/precompiledPamm/pamm_mac ./gmplabtools/pamm/precompiledPamm/bin/pamm
+```
+
+
+And then install gmplabtools with `python setup.py install`.
+
 ### Docker
 
 In order to build docker images following command should be used
